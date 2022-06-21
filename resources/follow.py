@@ -35,7 +35,7 @@ class Friends(Resource) :
                     '''
             record = (user_id, result_list[0]['id'])
             cursor = connection.cursor()
-            follow_list = cursor.execute(query, record)
+            cursor.execute(query, record)
             connection.commit()
 
             cursor.close()
@@ -82,3 +82,44 @@ class Friends(Resource) :
             "result_list" : result_list
         }, 200
     
+    # 팔로우 끊기
+    @jwt_required()
+    def delete(self) :
+        try :
+            connection = get_connection()
+            data = request.get_json()
+            # 이메일이 존재하는지 여부 확인하기 (팔로우를 위해)
+            query = '''
+                        select email, nickname, id
+                        from user
+                        where email = %s;
+                    '''
+            record = (data['email'], ) # tuple
+            cursor = connection.cursor(dictionary=True)
+            cursor.execute(query, record)
+            result_list = cursor.fetchall()
+
+            if len(result_list) != 1 :
+                return { "result" : "입력한 사용자가 존재하지 않습니다."}
+
+            # 이메일이 존재하면 해당 유저의 id를 팔로우
+            user_id = get_jwt_identity()
+            query = '''delete from follow where follower_id = %s,followee_id = %s;'''
+            record = (user_id, result_list[0]['id'])
+            cursor = connection.cursor()
+            cursor.execute(query, record)
+            connection.commit()
+
+            cursor.close()
+            connection.close()
+
+        except mysql.connector.Error as e :
+            print(e)
+            cursor.close()
+            connection.close()
+            return {"error" : str(e)}, 503 #HTTPStatus.SERVICE_UNAVAILABLE
+
+        return{
+            "result" : "success",
+            "result_list" : result_list[0]['email']+"("+result_list[0]['nickname']+") 님을 팔로우 해제하였습니다.",
+        }, 200

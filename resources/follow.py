@@ -104,7 +104,7 @@ class Friends(Resource) :
 
             # 이메일이 존재하면 해당 유저의 id를 팔로우
             user_id = get_jwt_identity()
-            query = '''delete from follow where follower_id = %s,followee_id = %s;'''
+            query = '''delete from follow where follower_id = %s and followee_id = %s;'''
             record = (user_id, result_list[0]['id'])
             cursor = connection.cursor()
             cursor.execute(query, record)

@@ -6,6 +6,7 @@ from ref.config import Config
 
 from resources.user import UserRegisterResource, UserLoginResource, UserLogoutResource, jwt_blocklist
 from resources.memo_modify import MemoResource, MemoModifyResource
+from resources.follow import Friends
 
 # API 서버를 구축하기 위한 기본 구조
 app = Flask(__name__)
@@ -32,6 +33,7 @@ api.add_resource(MemoModifyResource, '/memo/<int:memo_id>')
 api.add_resource(UserRegisterResource, '/users/register')
 api.add_resource(UserLoginResource, '/users/login')
 api.add_resource(UserLogoutResource, '/users/logout')
+api.add_resource(Friends, '/users/friends')
 
 if __name__ == '__main__' :
     app.run()

@@ -1,11 +1,12 @@
-import datetime
 from flask import request
-from flask_jwt_extended import create_access_token, get_jwt, jwt_required
 from flask_restful import Resource
+from flask_jwt_extended import create_access_token, get_jwt, jwt_required
+
 import mysql.connector
 from ref.mysql_connection import get_connection
-from email_validator import validate_email, EmailNotValidError
+
 from ref.utils import check_password, hash_password
+from email_validator import validate_email, EmailNotValidError
 
 class UserRegisterResource(Resource) :
     def post(self) :

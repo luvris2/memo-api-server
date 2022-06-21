@@ -23,7 +23,7 @@ class Friends(Resource) :
             result_list = cursor.fetchall()
 
             if len(result_list) != 1 :
-                return { "result" : "입력한 사용자가 존재하지 않습니다."}
+                return { "알림" : "입력한 사용자가 존재하지 않습니다."}
 
             # 이메일이 존재하면 해당 유저의 id를 팔로우
             user_id = get_jwt_identity()
@@ -49,7 +49,7 @@ class Friends(Resource) :
 
         return{
             "result" : "success",
-            "result_list" : result_list[0]['email']+"("+result_list[0]['nickname']+") 님을 팔로우하였습니다.",
+            "알림" : result_list[0]['email']+"("+result_list[0]['nickname']+") 님을 팔로우하였습니다.",
         }, 200
 
     # 팔로우한 친구의 메모 함께 보기
@@ -63,6 +63,10 @@ class Friends(Resource) :
             cursor = connection.cursor(dictionary=True)
             cursor.execute(query, record)
             result_list = cursor.fetchall()
+
+            if len(result_list) == 0 :
+                return { "알림" : "팔로우한 친구가 없습니다."}
+
             i = 0
             for record in result_list :
                 result_list[i]['created_at'] = record['created_at'].isoformat()
@@ -79,7 +83,7 @@ class Friends(Resource) :
 
         return{
             "result" : "success",
-            "result_list" : result_list
+            "메모 내용" : result_list
         }, 200
     
     # 팔로우 끊기
@@ -100,9 +104,9 @@ class Friends(Resource) :
             result_list = cursor.fetchall()
 
             if len(result_list) != 1 :
-                return { "result" : "입력한 사용자가 존재하지 않습니다."}
+                return { "알림" : "입력한 사용자가 존재하지 않습니다."}
 
-            # 이메일이 존재하면 해당 유저의 id를 팔로우
+            # 이메일이 존재하면 해당 유저의 id를 팔로우 해제
             user_id = get_jwt_identity()
             query = '''delete from follow where follower_id = %s and followee_id = %s;'''
             record = (user_id, result_list[0]['id'])
@@ -121,5 +125,5 @@ class Friends(Resource) :
 
         return{
             "result" : "success",
-            "result_list" : result_list[0]['email']+"("+result_list[0]['nickname']+") 님을 팔로우 해제하였습니다.",
+            "알림" : result_list[0]['email']+"("+result_list[0]['nickname']+") 님을 팔로우 해제하였습니다.",
         }, 200

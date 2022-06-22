@@ -128,3 +128,7 @@ def get_connection() :
     - 팔로우 해제
       - 팔로우 테이블의 데이터를 삭제
       - 팔로우를 해제하면 상대와 나의 메모가 보이지 않음
+
+---
+# POSTMAS API 명세서
+[https://universal-robot-12691.postman.co/documentation/21511170-87410f7c-a7b8-4226-80f4-55e359bc0ad4/publish?workspaceId=fedcce5d-cb81-49c3-8e67-5fd29f5adda5](https://documenter.getpostman.com/view/21511170/UzBns7pN)

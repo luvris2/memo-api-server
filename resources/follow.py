@@ -58,7 +58,10 @@ class Friends(Resource) :
         try :
             connection = get_connection()
             user_id = get_jwt_identity()
-            query = '''select * from memo join follow where follower_id = %s;'''
+            query = '''
+                        select * from memo join follow
+                        on memo.user_id = follow.followee_id
+                        where follower_id = %s;'''
             record = (user_id, ) # tuple
             cursor = connection.cursor(dictionary=True)
             cursor.execute(query, record)
